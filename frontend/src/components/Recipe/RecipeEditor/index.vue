@@ -12,7 +12,7 @@
         <v-col><v-text-field :label="$t('recipe.prep-time')" v-model="value.prepTime"></v-text-field></v-col>
         <v-col><v-text-field :label="$t('recipe.perform-time')" v-model="value.performTime"></v-text-field></v-col>
       </v-row>
-      <v-text-field class="my-3" :label="$t('recipe.recipe-name')" v-model="value.name" :rules="[existsRule]">
+      <v-text-field class="my-3" :label="$t('recipe.recipe-name')" v-model="value.name" :rules="[validators.required]">
       </v-text-field>
       <v-textarea auto-grow min-height="100" :label="$t('recipe.description')" v-model="value.description">
       </v-textarea>
@@ -87,7 +87,6 @@ import BulkAdd from "@/components/Recipe/Parts/Helpers/BulkAdd";
 import ExtrasEditor from "@/components/Recipe/Parts/Helpers/ExtrasEditor";
 import CategoryTagSelector from "@/components/FormHelpers/CategoryTagSelector";
 import ImageUploadBtn from "@/components/Recipe/Parts/Helpers/ImageUploadBtn";
-import { validators } from "@/mixins/validators";
 import Nutrition from "@/components/Recipe/Parts/Nutrition";
 import Instructions from "@/components/Recipe/Parts/Instructions";
 import Ingredients from "@/components/Recipe/Parts/Ingredients";
@@ -95,6 +94,8 @@ import Assets from "@/components/Recipe/Parts/Assets.vue";
 import Notes from "@/components/Recipe/Parts/Notes.vue";
 import SettingsMenu from "@/components/Recipe/Parts/Helpers/SettingsMenu.vue";
 import Rating from "@/components/Recipe/Parts/Rating";
+import { validators } from "@/composables/use-validators";
+
 export default {
   components: {
     BulkAdd,
@@ -112,7 +113,9 @@ export default {
   props: {
     value: Object,
   },
-  mixins: [validators],
+  setup() {
+    return { validators };
+  },
   data() {
     return {
       fileObject: null,

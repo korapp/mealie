@@ -39,11 +39,11 @@
       <TheSiteMenu />
 
       <v-slide-x-reverse-transition>
-        <TheRecipeFab v-if="loggedIn && isMobile" />
+        <TheRecipeFab v-if="user.loggedIn && isMobile" />
       </v-slide-x-reverse-transition>
     </v-app-bar>
     <v-slide-x-reverse-transition>
-      <TheRecipeFab v-if="loggedIn && !isMobile" :absolute="true" />
+      <TheRecipeFab v-if="user.loggedIn && !isMobile" :absolute="true" />
     </v-slide-x-reverse-transition>
   </div>
 </template>
@@ -54,11 +54,15 @@ import SearchBar from "@/components/UI/Search/SearchBar";
 import SearchDialog from "@/components/UI/Dialogs/SearchDialog";
 import TheRecipeFab from "@/components/UI/TheRecipeFab";
 import TheSidebar from "@/components/UI/TheSidebar";
-import { user } from "@/mixins/user";
+import { useUser } from "@/composables/use-user";
 export default {
   name: "AppBar",
 
-  mixins: [user],
+  setup() {
+    const user = useUser();
+    return { user };
+  },
+
   components: {
     SearchDialog,
     TheRecipeFab,

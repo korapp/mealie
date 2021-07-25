@@ -15,14 +15,15 @@
 </template>
 
 <script>
-import { initials } from "@/mixins/initials";
 import axios from "axios";
 import { api } from "@/api";
 export default {
-  mixins: [initials],
   props: {
     user: {
       type: Object,
+    },
+    initials: {
+      type: String,
     },
   },
   data() {

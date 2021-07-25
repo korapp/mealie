@@ -37,7 +37,7 @@
                 <v-text-field
                   v-model="newGroupName"
                   :label="$t('group.group-name')"
-                  :rules="[existsRule]"
+                  :rules="[validators.required]"
                 ></v-text-field>
               </v-card-text>
 
@@ -66,12 +66,15 @@
 </template>
 
 <script>
-import { validators } from "@/mixins/validators";
 import { api } from "@/api";
 import GroupCard from "./GroupCard";
+import { validators } from "@/composables/use-validators";
+
 export default {
   components: { GroupCard },
-  mixins: [validators],
+  setup() {
+    return { validators };
+  },
   data() {
     return {
       filter: "",

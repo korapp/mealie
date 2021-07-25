@@ -29,7 +29,7 @@
           <v-list-item :key="item.id" @click.prevent>
             <v-list-item-action>
               <v-btn fab small depressed color="primary">
-                {{ generateInitials(item.fullName) }}
+                {{ getInitials(item.fullName) }}
               </v-btn>
             </v-list-item-action>
 
@@ -116,9 +116,9 @@ import TimePickerDialog from "@/components/FormHelpers/TimePickerDialog";
 import CategoryTagSelector from "@/components/FormHelpers/CategoryTagSelector";
 import StatCard from "@/components/UI/StatCard";
 import MobileRecipeCard from "@/components/Recipe/MobileRecipeCard";
-import { validators } from "@/mixins/validators";
-import { initials } from "@/mixins/initials";
+import { useUser, getInitials } from "@/composables/use-user";
 import { api } from "@/api";
+
 export default {
   components: {
     StatCard,
@@ -126,7 +126,10 @@ export default {
     CategoryTagSelector,
     TimePickerDialog,
   },
-  mixins: [validators, initials],
+  setup() {
+    const user = useUser();
+    return { getInitials, user };
+  },
   data() {
     return {
       todaysMeal: false,
@@ -170,18 +173,6 @@ export default {
     async getTodaysMeal() {
       const response = await api.mealPlans.today();
       this.todaysMeal = response.data;
-    },
-    generateInitials(text) {
-      const allNames = text.trim().split(" ");
-      return allNames.reduce(
-        (acc, curr, index) => {
-          if (index === 0 || index === allNames.length - 1) {
-            acc = `${acc}${curr.charAt(0).toUpperCase()}`;
-          }
-          return acc;
-        },
-        [""]
-      );
     },
     getSiteSettings() {
       this.groupSettings = this.$store.getters.getCurrentGroup;

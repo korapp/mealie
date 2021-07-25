@@ -45,7 +45,7 @@
               <v-text-field
                 v-model="editedItem.name"
                 :label="$t('user.link-name')"
-                :rules="[existsRule]"
+                :rules="[validators.required]"
                 validate-on-blur
               ></v-text-field>
               <v-checkbox v-model="editedItem.admin" :label="$t('user.admin')"></v-checkbox>
@@ -96,11 +96,13 @@
 <script>
 import TheCopyButton from "@/components/UI/Buttons/TheCopyButton";
 import ConfirmationDialog from "@/components/UI/Dialogs/ConfirmationDialog";
+import { validators } from "@/composables/use-validators";
 import { api } from "@/api";
-import { validators } from "@/mixins/validators";
 export default {
   components: { ConfirmationDialog, TheCopyButton },
-  mixins: [validators],
+  setup() {
+    return { validators };
+  },
   data() {
     return {
       dialog: false,

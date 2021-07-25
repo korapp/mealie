@@ -12,7 +12,7 @@
         <v-card-text>
           <v-text-field
             :placeholder="$t('settings.toolbox.new-name')"
-            :rules="[existsRule]"
+            :rules="[validators.required]"
             v-model="renameTarget.newName"
           ></v-text-field>
         </v-card-text>
@@ -100,14 +100,13 @@ import FuseSearchBar from "@/components/UI/Search/FuseSearchBar";
 import MobileRecipeCard from "@/components/Recipe/MobileRecipeCard";
 import BaseDialog from "@/components/UI/Dialogs/BaseDialog";
 import { api } from "@/api";
-import { validators } from "@/mixins/validators";
 import RemoveUnused from "./RemoveUnused";
 import BulkAssign from "./BulkAssign";
 import NewCategoryTagDialog from "@/components/UI/Dialogs/NewCategoryTagDialog";
 import ConfirmationDialog from "@/components/UI/Dialogs/ConfirmationDialog.vue";
 import TheButton from "@/components/UI/Buttons/TheButton.vue";
+import { validators } from "@/composables/use-validators";
 export default {
-  mixins: [validators],
   components: {
     BaseDialog,
     MobileRecipeCard,
@@ -117,6 +116,9 @@ export default {
     BulkAssign,
     ConfirmationDialog,
     TheButton,
+  },
+  setup() {
+    return { validators };
   },
   props: {
     isTags: {

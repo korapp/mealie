@@ -1,11 +1,6 @@
 <template>
-  <v-container fill-height class="text-center">
-    <v-row>
-      <v-flex class="d-flex justify-center" width="500px">
-        <SignUpForm @logged-in="redirectMe" class="ma-1" />
-      </v-flex>
-    </v-row>
-    <v-row></v-row>
+  <v-container fill-height class="d-flex justify-center align-start">
+    <SignUpForm @logged-in="redirectMe" class="ma-1" />
   </v-container>
 </template>
 

@@ -73,7 +73,7 @@ import PrintView from "@/components/Recipe/PrintView";
 import RecipeEditor from "@/components/Recipe/RecipeEditor";
 import RecipeTimeCard from "@/components/Recipe/RecipeTimeCard.vue";
 import NoRecipe from "@/components/Fallbacks/NoRecipe";
-import { user } from "@/mixins/user";
+import { useUser } from "@/composables/use-user";
 import { router } from "@/routes";
 import CommentsSection from "@/components/Recipe/CommentSection";
 
@@ -88,7 +88,10 @@ export default {
     NoRecipe,
     CommentsSection,
   },
-  mixins: [user],
+  setup() {
+    const user = useUser();
+    return { user };
+  },
   inject: {
     theme: {
       default: { isDark: false },

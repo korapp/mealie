@@ -1,10 +1,10 @@
 <template>
   <div class="d-print-none no-print">
-    <v-navigation-drawer v-model="showSidebar" width="180px" clipped app>
+    <v-navigation-drawer v-model="showSidebar" bottom width="180px" clipped app>
       <template v-slot:prepend>
-        <UserAvatar v-if="isLoggedIn" :user="user" />
+        <UserAvatar v-if="user.loggedIn" :user="user.data" :initials="user.initials" />
 
-        <v-list-item dense v-if="isLoggedIn" :to="`/user/${user.id}/favorites`">
+        <v-list-item dense v-if="user.loggedIn" :to="`/user/${user.data.id}/favorites`">
           <v-list-item-icon>
             <v-icon> {{ $globals.icons.heart }} </v-icon>
           </v-list-item-icon>
@@ -61,19 +61,20 @@
 
 <script>
 import UserAvatar from "@/components/User/UserAvatar";
-import { initials } from "@/mixins/initials";
-import { user } from "@/mixins/user";
+import { useUser } from "@/composables/use-user";
 import axios from "axios";
 export default {
   components: {
     UserAvatar,
   },
-  mixins: [initials, user],
+  setup() {
+    const user = useUser();
+    return { user };
+  },
   data() {
     return {
       showSidebar: false,
       links: [],
-
       latestVersion: null,
       hideImage: false,
     };
@@ -83,9 +84,6 @@ export default {
   },
 
   watch: {
-    user() {
-      this.hideImage = false;
-    },
     isMain(val) {
       if (val) {
         this.$store.dispatch("requestCustomPages");
@@ -185,7 +183,7 @@ export default {
       ];
     },
     adminMenu() {
-      if (this.user.admin) {
+      if (this.user.data.admin) {
         return [...this.settingsLinks, ...this.adminLinks];
       } else {
         return this.settingsLinks;
@@ -196,7 +194,7 @@ export default {
     },
     userProfileImage() {
       this.resetImage();
-      return `api/users/${this.user.id}/image`;
+      return `api/users/${this.user.data.id}/image`;
     },
     newVersionAvailable() {
       return this.latestVersion == this.appVersion ? false : true;
@@ -204,9 +202,6 @@ export default {
     appVersion() {
       const appInfo = this.$store.getters.getAppInfo;
       return appInfo.version;
-    },
-    isLoggedIn() {
-      return this.$store.getters.getIsLoggedIn;
     },
     isMobile() {
       return this.$vuetify.breakpoint.name === "xs";
@@ -217,7 +212,6 @@ export default {
     resetImage() {
       this.hideImage == false;
     },
-
     toggleSidebar() {
       this.showSidebar = !this.showSidebar;
     },

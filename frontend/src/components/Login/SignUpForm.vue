@@ -11,7 +11,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
-    <v-card-text>
+    <v-card-text class="text-center">
       {{ $t("signup.welcome-to-mealie") }}
       <v-divider class="mt-3"></v-divider>
       <v-form ref="signUpForm" @submit.prevent="signUp">
@@ -20,7 +20,7 @@
           light="light"
           :prepend-icon="$globals.icons.user"
           validate-on-blur
-          :rules="[existsRule]"
+          :rules="[validators.required]"
           :label="$t('user.full-name')"
         ></v-text-field>
         <v-text-field
@@ -28,7 +28,7 @@
           light="light"
           :prepend-icon="$globals.icons.user"
           validate-on-blur
-          :rules="[existsRule]"
+          :rules="[validators.required]"
           :label="$t('user.username')"
         ></v-text-field>
         <v-text-field
@@ -36,7 +36,7 @@
           light="light"
           :prepend-icon="$globals.icons.email"
           validate-on-blur
-          :rules="[existsRule, emailRule]"
+          :rules="[validators.required, validators.email]"
           :label="$t('user.email')"
           type="email"
         ></v-text-field>
@@ -48,7 +48,7 @@
           validate-on-blur
           :label="$t('user.password')"
           :type="showPassword ? 'text' : 'password'"
-          :rules="[minRule]"
+          :rules="[validators.min]"
         ></v-text-field>
         <v-text-field
           v-model="user.passwordConfirm"
@@ -76,9 +76,11 @@
 
 <script>
 import { api } from "@/api";
-import { validators } from "@/mixins/validators";
+import { validators } from "@/composables/use-validators";
 export default {
-  mixins: [validators],
+  setup() {
+    return { validators };
+  },
   data() {
     return {
       loading: false,

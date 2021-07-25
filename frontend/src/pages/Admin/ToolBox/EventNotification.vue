@@ -30,17 +30,17 @@
               <v-form ref="notificationForm">
                 <v-select
                   :label="$t('general.type')"
-                  :rules="[existsRule]"
+                  :rules="[validators.required]"
                   :items="notificationTypes"
                   item-value="text"
                   v-model="newNotification.type"
                 >
                 </v-select>
-                <v-text-field :rules="[existsRule]" :label="$t('general.name')" v-model="newNotification.name">
+                <v-text-field :rules="[validators.required]" :label="$t('general.name')" v-model="newNotification.name">
                 </v-text-field>
                 <v-text-field
                   required
-                  :rules="[existsRule]"
+                  :rules="[validators.required]"
                   :label="$t('events.apprise-url')"
                   v-model="newNotification.notificationUrl"
                 >
@@ -109,12 +109,14 @@
 <script>
 import BaseDialog from "@/components/UI/Dialogs/BaseDialog";
 import { api } from "@/api";
-import { validators } from "@/mixins/validators";
+import { validators } from "@/composables/use-validators";
 export default {
   components: {
     BaseDialog,
   },
-  mixins: [validators],
+  setup() {
+    return { validators };
+  },
   data() {
     return {
       keepDialogOpen: false,

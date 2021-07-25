@@ -4,7 +4,7 @@
       <v-avatar color="accent" size="120" class="white--text headline mt-n16">
         <img :src="userProfileImage" v-if="!hideImage" @error="hideImage = true" @load="hideImage = false" />
         <div v-else>
-          {{ initials }}
+          {{ getInitials(user.fullName) }}
         </div>
       </v-avatar>
     </template>
@@ -39,7 +39,7 @@
               v-model="password.current"
               :prepend-icon="$globals.icons.lock"
               :label="$t('user.current-password')"
-              :rules="[existsRule]"
+              :rules="[validators.required]"
               validate-on-blur
               :type="showPassword ? 'text' : 'password'"
               @click:append="showPassword.current = !showPassword.current"
@@ -48,7 +48,7 @@
               v-model="password.newOne"
               :prepend-icon="$globals.icons.lock"
               :label="$t('user.new-password')"
-              :rules="[minRule]"
+              :rules="[validators.min]"
               :type="showPassword ? 'text' : 'password'"
               @click:append="showPassword.newOne = !showPassword.newOne"
             ></v-text-field>
@@ -72,7 +72,7 @@
             :label="$t('user.username')"
             required
             v-model="user.username"
-            :rules="[existsRule]"
+            :rules="[validators.required]"
             validate-on-blur
           >
           </v-text-field>
@@ -80,11 +80,17 @@
             :label="$t('user.full-name')"
             required
             v-model="user.fullName"
-            :rules="[existsRule]"
+            :rules="[validators.required]"
             validate-on-blur
           >
           </v-text-field>
-          <v-text-field :label="$t('user.email')" :rules="[emailRule]" validate-on-blur required v-model="user.email">
+          <v-text-field
+            :label="$t('user.email')"
+            :rules="[validators.email, validators.required]"
+            validate-on-blur
+            required
+            v-model="user.email"
+          >
           </v-text-field>
         </v-form>
       </v-card-text>
@@ -108,15 +114,18 @@ import BaseDialog from "@/components/UI/Dialogs/BaseDialog";
 import StatCard from "@/components/UI/StatCard";
 import TheUploadBtn from "@/components/UI/Buttons/TheUploadBtn";
 import { api } from "@/api";
-import { validators } from "@/mixins/validators";
-import { initials } from "@/mixins/initials";
+import { getInitials } from "@/composables/use-user";
+import { validators } from "@/composables/use-validators";
+
 export default {
   components: {
     BaseDialog,
     TheUploadBtn,
     StatCard,
   },
-  mixins: [validators, initials],
+  setup() {
+    return { getInitials, validators };
+  },
   data() {
     return {
       hideImage: false,

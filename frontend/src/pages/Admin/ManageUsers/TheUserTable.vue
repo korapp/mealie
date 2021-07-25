@@ -55,7 +55,7 @@
                   <v-text-field
                     v-model="editedItem.fullName"
                     :label="$t('user.full-name')"
-                    :rules="[existsRule]"
+                    :rules="[validators.required]"
                     validate-on-blur
                   ></v-text-field>
                 </v-col>
@@ -63,7 +63,7 @@
                   <v-text-field
                     v-model="editedItem.email"
                     :label="$t('user.email')"
-                    :rules="[existsRule, emailRule]"
+                    :rules="[validators.required, validators.email]"
                     validate-on-blur
                   ></v-text-field>
                 </v-col>
@@ -80,7 +80,7 @@
                     dense
                     v-model="editedItem.password"
                     :label="$t('user.user-password')"
-                    :rules="[existsRule, minRule]"
+                    :rules="[validators.required, validators.min]"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="12" md="3">
@@ -138,10 +138,12 @@
 <script>
 import ConfirmationDialog from "@/components/UI/Dialogs/ConfirmationDialog";
 import { api } from "@/api";
-import { validators } from "@/mixins/validators";
+import { validators } from "@/composables/use-validators";
 export default {
   components: { ConfirmationDialog },
-  mixins: [validators],
+  setup() {
+    return { validators };
+  },
   data() {
     return {
       search: "",

@@ -6,13 +6,13 @@
           {{ $t("settings.token.api-tokens") }}
         </h2>
         <h3 class="display-2 font-weight-light text--primary">
-          <small> {{ user.tokens.length }} </small>
+          <small> {{ user.data.tokens.length }} </small>
         </h3>
       </div>
     </template>
     <template v-slot:bottom>
       <v-subheader class="mb-n2">{{ $t("settings.token.active-tokens") }}</v-subheader>
-      <v-virtual-scroll height="210" item-height="70" :items="user.tokens" class="mt-2">
+      <v-virtual-scroll height="210" item-height="70" :items="user.data.tokens" class="mt-2">
         <template v-slot:default="{ item }">
           <v-divider></v-divider>
           <v-list-item @click.prevent>
@@ -84,14 +84,16 @@
 import BaseDialog from "@/components/UI/Dialogs/BaseDialog";
 import StatCard from "@/components/UI/StatCard";
 import { api } from "@/api";
-import { validators } from "@/mixins/validators";
-import { initials } from "@/mixins/initials";
+import { useUser } from "@/composables/use-user";
 export default {
   components: {
     BaseDialog,
     StatCard,
   },
-  mixins: [validators, initials],
+  setup() {
+    const user = useUser();
+    return { user };
+  },
   data() {
     return {
       name: "",
@@ -105,9 +107,6 @@ export default {
   },
 
   computed: {
-    user() {
-      return this.$store.getters.getUserData;
-    },
     buttonText() {
       if (this.createdToken === "") {
         return this.$t("general.create");
